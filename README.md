@@ -72,8 +72,8 @@ src/
 
 ## Demo
 
-[To-Do List App / Quick demo part 1](https://youtu.be/7Pm52-JEqiE)
-[To-Do List App / Quick demo part 1](https://youtu.be/drXn56d8mjA)
+- [To-Do List App / Quick demo part 1](https://youtu.be/7Pm52-JEqiE)
+- [To-Do List App / Quick demo part 2](https://youtu.be/drXn56d8mjA)
 
 ## Accessibility
 
