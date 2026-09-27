@@ -1,12 +1,12 @@
 import { createBrowserRouter, type RouteObject } from 'react-router'
-import App from '@/App'
 import ErrorPage from '@/pages/ErrorPage'
 import NotFoundPage from '@/pages/NotFoundPage'
+import TasksPage from '@/pages/TasksPage'
 
 export const routes: RouteObject[] = [
   {
     path: '/',
-    Component: App,
+    Component: TasksPage,
     ErrorBoundary: ErrorPage,
   },
   {

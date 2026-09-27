@@ -8,13 +8,16 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   commitlint:
     name: Conventional commits
+    # `edited` also fires for description edits (e.g. ticking the template
+    # checklist); only re-run when the title changed
+    if: github.event.action != 'edited' || github.event.changes.title != null
+    # Job-level so a skipped run doesn't cancel one in progress
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

@@ -10,9 +10,11 @@ const renderRoute = (path: string, routeList: RouteObject[] = routes) => {
   render(<RouterProvider router={router} />)
 }
 
-it('renders the home page on /', () => {
+it('renders the tasks page on /', () => {
   renderRoute('/')
-  expect(screen.getByText('Hello World!')).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', { level: 1, name: 'Tareas' }),
+  ).toBeInTheDocument()
 })
 
 it('renders the 404 page on an unknown path', () => {
