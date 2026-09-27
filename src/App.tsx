@@ -1,7 +1,7 @@
 const App = () => {
   return (
-    <div>
-      <p>Hello World!</p>
+    <div className="flex h-screen items-center justify-center">
+      <p className="text-2xl font-bold">Hello World!</p>
     </div>
   )
 }
