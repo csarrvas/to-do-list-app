@@ -1,1 +1,64 @@
 @import 'tailwindcss';
+
+/* `dark:` follows the `.dark` class on <html>, same as the tokens below */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    'Atkinson Hyperlegible Next Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Sizes from the design that fall between Tailwind's steps */
+  --text-caption: 0.8125rem; /* 13px */
+  --text-caption--line-height: 1.5;
+  --text-body: 0.9375rem; /* 15px */
+  --text-body--line-height: 1.5;
+  --text-body-lg: 1.0625rem; /* 17px */
+  --text-body-lg--line-height: 1.5;
+  --text-title: 1.375rem; /* 22px */
+  --text-title--line-height: 1.25;
+  --text-display: 4rem; /* 64px */
+  --text-display--line-height: 1;
+
+  /* Only the design tokens exist, so every color switches with the theme */
+  --color-*: initial;
+  --color-canvas: #edeff3;
+  --color-surface: #ffffff;
+  --color-field: #f5f6f9;
+  --color-line: #d5d9e2;
+  --color-ink: #151b2b;
+  --color-muted: #525c70;
+  --color-accent: #2a48c9;
+  --color-on-accent: #ffffff;
+  --color-danger: #b3261e;
+  --color-done: #6b7385;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --color-canvas: #0d1220;
+    --color-surface: #151c2d;
+    --color-field: #10172a;
+    --color-line: #2a3350;
+    --color-ink: #e7eaf2;
+    --color-muted: #9ca5b8;
+    --color-accent: #8ea2ff;
+    --color-on-accent: #0d1220;
+    --color-danger: #ff8a80;
+    --color-done: #7f889c;
+  }
+
+  body {
+    @apply bg-canvas text-ink antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}
