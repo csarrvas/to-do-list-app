@@ -1,11 +1,10 @@
 import { Moon, Sun } from 'lucide-react'
 import IconButton from '@/components/ui/IconButton'
-
-export type Theme = 'light' | 'dark'
+import type { Theme } from '@/features/theme/themeSlice'
 
 type ThemeToggleProps = {
   theme: Theme
-  onToggle?: () => void
+  onToggle: () => void
   className?: string
 }
 

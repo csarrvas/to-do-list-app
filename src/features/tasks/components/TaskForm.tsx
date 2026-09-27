@@ -1,27 +1,26 @@
-import { useId } from 'react'
+import { useId, useRef, useState, type FormEvent } from 'react'
 import { Plus } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import FieldError from '@/components/ui/FieldError'
 import Input from '@/components/ui/Input'
+import type { NewTask } from '@/features/tasks/types'
+import { validateTask, type TaskErrors } from '@/features/tasks/validation'
 import { cn } from '@/utils/cn'
 
-export type TaskFormErrors = {
-  name?: string
-  dueDate?: string
-}
-
 type TaskFormProps = {
-  /** `YYYY-MM-DD` */
-  defaultDueDate?: string
-  errors?: TaskFormErrors
+  /** Initial date, `YYYY-MM-DD` */
+  defaultDueDate: string
+  onAdd: (task: NewTask) => void
   className?: string
 }
 
-const TaskForm = ({
-  defaultDueDate,
-  errors = {},
-  className,
-}: TaskFormProps) => {
+const TaskForm = ({ defaultDueDate, onAdd, className }: TaskFormProps) => {
+  const [name, setName] = useState('')
+  const [dueDate, setDueDate] = useState(defaultDueDate)
+  const [errors, setErrors] = useState<TaskErrors>({})
+  const nameRef = useRef<HTMLInputElement>(null)
+  const dueDateRef = useRef<HTMLInputElement>(null)
+
   const headingId = useId()
   const nameId = useId()
   const nameLabelId = useId()
@@ -29,12 +28,29 @@ const TaskForm = ({
   const dueDateId = useId()
   const dueDateErrorId = useId()
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const task = { name: name.trim(), dueDate }
+    const nextErrors = validateTask(task)
+    setErrors(nextErrors)
+
+    // Focus the first field to fix, or the name again to add the next task
+    if (nextErrors.name) {
+      nameRef.current?.focus()
+    } else if (nextErrors.dueDate) {
+      dueDateRef.current?.focus()
+    } else {
+      onAdd(task)
+      setName('')
+      nameRef.current?.focus()
+    }
+  }
+
   return (
     <form
       aria-labelledby={headingId}
       noValidate
-      // Adding tasks isn't wired up yet; this keeps the page from reloading
-      onSubmit={(event) => event.preventDefault()}
+      onSubmit={handleSubmit}
       className={cn(
         'rounded-2xl border border-line bg-surface p-4 lg:p-6',
         className,
@@ -59,8 +75,14 @@ const TaskForm = ({
             Nombre
           </label>
           <Input
+            ref={nameRef}
             id={nameId}
             name="name"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+              setErrors((current) => ({ ...current, name: undefined }))
+            }}
             placeholder="¿Qué necesitas hacer?"
             autoComplete="off"
             required
@@ -82,10 +104,15 @@ const TaskForm = ({
             Fecha
           </label>
           <Input
+            ref={dueDateRef}
             id={dueDateId}
             name="dueDate"
             type="date"
-            defaultValue={defaultDueDate}
+            value={dueDate}
+            onChange={(event) => {
+              setDueDate(event.target.value)
+              setErrors((current) => ({ ...current, dueDate: undefined }))
+            }}
             required
             aria-invalid={errors.dueDate ? true : undefined}
             aria-describedby={errors.dueDate ? dueDateErrorId : undefined}

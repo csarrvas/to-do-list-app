@@ -1,13 +1,14 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { createMemoryRouter, type RouteObject } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { vi } from 'vitest'
 import ErrorPage from '@/pages/ErrorPage'
 import { routes } from '@/router'
+import { renderWithProviders } from '@/test/utils'
 
 const renderRoute = (path: string, routeList: RouteObject[] = routes) => {
   const router = createMemoryRouter(routeList, { initialEntries: [path] })
-  render(<RouterProvider router={router} />)
+  renderWithProviders(<RouterProvider router={router} />)
 }
 
 it('renders the tasks page on /', () => {
