@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
-import Button from './Button'
+import Button from '@/components/Button'
 
 it('renders the label', () => {
   render(<Button label="Click me" onClick={() => {}} />)
