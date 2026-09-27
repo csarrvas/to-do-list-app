@@ -19,6 +19,7 @@ import { useTaskSearch } from '@/features/tasks/useTaskSearch'
 import { useTheme } from '@/features/theme/useTheme'
 import { useToday } from '@/hooks/useToday'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { autoAnimateRef } from '@/utils/autoAnimateRef'
 import { toDateKey } from '@/utils/date'
 
 const TasksPage = () => {
@@ -62,8 +63,11 @@ const TasksPage = () => {
           onChange={search.setQuery}
           className="lg:col-start-2 lg:row-start-1"
         />
-        {/* On mobile the list sits a bit closer to the search that filters it */}
+        {/* On mobile the list sits a bit closer to the search that filters it.
+            The ref crossfades between the list and the empty and no-results
+            states */}
         <section
+          ref={autoAnimateRef}
           aria-labelledby={listHeadingId}
           className="-mt-1 lg:col-span-2 lg:col-start-2 lg:row-start-2 lg:mt-0"
         >
