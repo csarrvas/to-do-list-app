@@ -4,8 +4,8 @@ import type { Task } from '@/features/tasks/types'
 type TaskListProps = {
   tasks: Task[]
   today: Date
-  onToggle?: (id: string) => void
-  onDelete?: (id: string) => void
+  onToggle: (id: string) => void
+  onDelete: (id: string) => void
 }
 
 const TaskList = ({ tasks, today, onToggle, onDelete }: TaskListProps) => {

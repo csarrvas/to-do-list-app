@@ -2,7 +2,7 @@ import Button from '@/components/ui/Button'
 
 type NoResultsProps = {
   query: string
-  onClear?: () => void
+  onClear: () => void
 }
 
 const NoResults = ({ query, onClear }: NoResultsProps) => {

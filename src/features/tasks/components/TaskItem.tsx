@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, useLayoutEffect, useRef } from 'react'
 import { Trash2 } from 'lucide-react'
 import Checkbox from '@/components/ui/Checkbox'
 import IconButton from '@/components/ui/IconButton'
@@ -18,21 +18,36 @@ const toneClassNames: Record<DueTone, string> = {
 type TaskItemProps = {
   task: Task
   today: Date
-  onToggle?: (id: string) => void
-  onDelete?: (id: string) => void
+  onToggle: (id: string) => void
+  onDelete: (id: string) => void
 }
 
 const TaskItem = ({ task, today, onToggle, onDelete }: TaskItemProps) => {
   const nameId = useId()
   const statusId = useId()
+  const checkboxRef = useRef<HTMLInputElement>(null)
+  const refocusCheckbox = useRef(false)
   const dueDate = parseDateKey(task.dueDate)
   const status = getDueStatus(task, today)
+
+  // Toggling can move the task to another place in the list, and moving the
+  // element blurs it. Give the focus back before the browser paints.
+  useLayoutEffect(() => {
+    if (!refocusCheckbox.current) return
+    refocusCheckbox.current = false
+    checkboxRef.current?.focus({ preventScroll: true })
+  }, [task.completed])
 
   return (
     <li className="flex items-center gap-2 py-2 pr-1 lg:gap-3.5 lg:py-3">
       <Checkbox
+        ref={checkboxRef}
         checked={task.completed}
-        onChange={() => onToggle?.(task.id)}
+        onChange={(event) => {
+          refocusCheckbox.current =
+            document.activeElement === event.currentTarget
+          onToggle(task.id)
+        }}
         aria-labelledby={nameId}
         aria-describedby={statusId}
       />
@@ -60,7 +75,7 @@ const TaskItem = ({ task, today, onToggle, onDelete }: TaskItemProps) => {
       </div>
       <IconButton
         label={`Eliminar «${task.name}»`}
-        onClick={() => onDelete?.(task.id)}
+        onClick={() => onDelete(task.id)}
       >
         <Trash2 />
       </IconButton>

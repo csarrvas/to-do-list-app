@@ -1,21 +1,45 @@
-import { useId, useState } from 'react'
+import { useId, useRef } from 'react'
 import Header from '@/components/Header'
+import EmptyTasks from '@/features/tasks/components/EmptyTasks'
+import NoResults from '@/features/tasks/components/NoResults'
 import TaskForm from '@/features/tasks/components/TaskForm'
 import TaskList from '@/features/tasks/components/TaskList'
-import TaskSearch from '@/features/tasks/components/TaskSearch'
+import TaskSearch, {
+  type TaskSearchHandle,
+} from '@/features/tasks/components/TaskSearch'
 import TaskSummary from '@/features/tasks/components/TaskSummary'
-import { getSampleTasks } from '@/features/tasks/sampleTasks'
+import {
+  selectPendingCount,
+  selectTasks,
+  taskAdded,
+  taskDeleted,
+  taskToggled,
+} from '@/features/tasks/tasksSlice'
+import { useTaskSearch } from '@/features/tasks/useTaskSearch'
+import { useTheme } from '@/features/theme/useTheme'
+import { useToday } from '@/hooks/useToday'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { toDateKey } from '@/utils/date'
 
 const TasksPage = () => {
-  const [today] = useState(() => new Date())
+  const dispatch = useAppDispatch()
+  const tasks = useAppSelector(selectTasks)
+  const pendingCount = useAppSelector(selectPendingCount)
+  const today = useToday()
+  const { theme, toggleTheme } = useTheme()
+  const search = useTaskSearch(tasks, today)
+  const searchRef = useRef<TaskSearchHandle>(null)
   const listHeadingId = useId()
-  const tasks = getSampleTasks(today)
-  const pendingCount = tasks.filter((task) => !task.completed).length
+
+  const clearSearch = () => {
+    search.clear()
+    // The button goes away with the empty result; continue in the search
+    searchRef.current?.focus()
+  }
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 pt-5 pb-12 sm:px-6 lg:max-w-300 lg:px-8 lg:pt-11 lg:pb-16">
-      <Header today={today} theme="light" />
+      <Header today={today} theme={theme} onToggleTheme={toggleTheme} />
 
       {/* One column on mobile. On desktop the form takes the left column and
           the search, summary and list the right one */}
@@ -29,9 +53,15 @@ const TasksPage = () => {
         />
         <TaskForm
           defaultDueDate={toDateKey(today)}
+          onAdd={(task) => dispatch(taskAdded(task))}
           className="lg:sticky lg:top-8 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-start"
         />
-        <TaskSearch className="lg:col-start-2 lg:row-start-1" />
+        <TaskSearch
+          ref={searchRef}
+          value={search.query}
+          onChange={search.setQuery}
+          className="lg:col-start-2 lg:row-start-1"
+        />
         {/* On mobile the list sits a bit closer to the search that filters it */}
         <section
           aria-labelledby={listHeadingId}
@@ -40,7 +70,18 @@ const TasksPage = () => {
           <h2 id={listHeadingId} className="sr-only">
             Lista de tareas
           </h2>
-          <TaskList tasks={tasks} today={today} />
+          {tasks.length === 0 ? (
+            <EmptyTasks />
+          ) : search.results.length === 0 ? (
+            <NoResults query={search.activeQuery} onClear={clearSearch} />
+          ) : (
+            <TaskList
+              tasks={search.results}
+              today={today}
+              onToggle={(id) => dispatch(taskToggled(id))}
+              onDelete={(id) => dispatch(taskDeleted(id))}
+            />
+          )}
         </section>
       </main>
     </div>

@@ -20,6 +20,13 @@ export const parseDateKey = (key: string) => {
   return new Date(year, month - 1, day)
 }
 
+/** Whether `value` is an existing date in `YYYY-MM-DD` format. */
+export const isDateKey = (value: string) =>
+  /^\d{4}-\d{2}-\d{2}$/.test(value) && toDateKey(parseDateKey(value)) === value
+
+export const startOfDay = (date: Date) =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDate())
+
 export const addDays = (date: Date, days: number) =>
   new Date(date.getFullYear(), date.getMonth(), date.getDate() + days)
 

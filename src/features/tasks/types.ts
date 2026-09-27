@@ -5,3 +5,6 @@ export type Task = {
   dueDate: string
   completed: boolean
 }
+
+/** What the user fills in to create a task */
+export type NewTask = Pick<Task, 'name' | 'dueDate'>

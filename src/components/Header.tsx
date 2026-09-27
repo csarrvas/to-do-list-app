@@ -1,10 +1,11 @@
-import ThemeToggle, { type Theme } from '@/components/ThemeToggle'
+import ThemeToggle from '@/features/theme/components/ThemeToggle'
+import type { Theme } from '@/features/theme/themeSlice'
 import { formatLongDate, toDateKey } from '@/utils/date'
 
 type HeaderProps = {
   today: Date
   theme: Theme
-  onToggleTheme?: () => void
+  onToggleTheme: () => void
 }
 
 const Header = ({ today, theme, onToggleTheme }: HeaderProps) => {
