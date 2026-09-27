@@ -70,6 +70,11 @@ src/
 - **Theme:** colors are design tokens defined as Tailwind theme variables and redefined under a `.dark` class. A small script in `index.html` applies the saved theme before the first paint, so the wrong one doesn't flash.
 - **Animations:** AutoAnimate animates tasks as they're added, deleted, filtered or reordered, and the switch between the list and its empty states. It's attached with a ref callback that cleans up after itself, because the library's React hook registers twice under StrictMode and its move animations cancel each other.
 
+## Demo
+
+[To-Do List App / Quick demo part 1](https://youtu.be/7Pm52-JEqiE)
+[To-Do List App / Quick demo part 1](https://youtu.be/drXn56d8mjA)
+
 ## Accessibility
 
 - Text is set in [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/), a typeface from the Braille Institute designed to tell similar characters apart (`I`, `l`, `1`, `O`, `0`), which helps readers with low vision. Headings and day numbers use Bricolage Grotesque.
